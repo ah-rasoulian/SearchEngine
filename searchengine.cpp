@@ -31,7 +31,7 @@ void SearchEngine::on_document_button_clicked()
         ui->result_list->addItem("There is no such directory!");
         return;
     }
-    tokenizer->tokenize(directory);
+    tokenizer->find_files(directory);
 }
 
 void SearchEngine::show_message(QString message){

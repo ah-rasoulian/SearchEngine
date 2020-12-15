@@ -10,7 +10,10 @@ class Tokenizer : public QObject
 
 public:
     Tokenizer();
-    void tokenize(QDir directory);
+    void find_files(QDir directory);
+
+private:
+    void tokenize(QFile *file);
 
 signals:
     void show_message(QString message);
