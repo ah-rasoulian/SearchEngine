@@ -14,7 +14,7 @@
    <string>SearchEngine</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="result_list">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -53,12 +53,12 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QPlainTextEdit" name="search_input">
+    <widget class="QTextEdit" name="search_input">
      <property name="autoFillBackground">
       <bool>true</bool>
      </property>
-     <property name="plainText">
-      <string>Search For?</string>
+     <property name="placeholderText">
+      <string>Insert Querry.</string>
      </property>
     </widget>
     <widget class="QPushButton" name="search_button">
@@ -90,11 +90,11 @@
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QPlainTextEdit" name="document_input">
+    <widget class="QTextEdit" name="document_input">
      <property name="autoFillBackground">
       <bool>true</bool>
      </property>
-     <property name="plainText">
+     <property name="placeholderText">
       <string>Documents Directory?</string>
      </property>
     </widget>

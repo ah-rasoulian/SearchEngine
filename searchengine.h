@@ -2,6 +2,9 @@
 #define SEARCHENGINE_H
 
 #include <QMainWindow>
+#include <tokenizer.h>
+#include <databasehandler.h>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SearchEngine; }
@@ -15,6 +18,9 @@ public:
     SearchEngine(QWidget *parent = nullptr);
     ~SearchEngine();
 
+public slots:
+    void show_message(QString message);
+
 private slots:
     void on_search_button_clicked();
 
@@ -22,5 +28,8 @@ private slots:
 
 private:
     Ui::SearchEngine *ui;
+    DatabaseHandler *database;
+    Tokenizer *tokenizer;
+
 };
 #endif // SEARCHENGINE_H
