@@ -15,6 +15,11 @@ public:
     SearchEngine(QWidget *parent = nullptr);
     ~SearchEngine();
 
+private slots:
+    void on_search_button_clicked();
+
+    void on_document_button_clicked();
+
 private:
     Ui::SearchEngine *ui;
 };

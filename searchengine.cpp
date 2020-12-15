@@ -13,3 +13,13 @@ SearchEngine::~SearchEngine()
     delete ui;
 }
 
+
+void SearchEngine::on_search_button_clicked()
+{
+
+}
+
+void SearchEngine::on_document_button_clicked()
+{
+
+}
