@@ -24,10 +24,12 @@ void DatabaseHandler::indexer(QString word, unsigned long docID, unsigned long p
     if(postings.contains(word)){
         postings_list old_postings_list = postings.value(word);
         old_postings_list.doc_position.insert(docID, position);
+        old_postings_list.frequency ++;
     }
     else{
         postings_list new_postings_list;
         new_postings_list.doc_position.insert(docID, position);
+        new_postings_list.frequency = 1;
         postings.insert(word, new_postings_list);
     }
 }

@@ -15,7 +15,7 @@ public:
 
 private:
 
-    void tokenize(QFile *file, unsigned long docID);
+    void document_tokenize(QFile *file, unsigned long docID);
 
     QStringList persian_punctuations = {};
     QStringList persian_plural_signs = {};

@@ -10,6 +10,8 @@ SearchEngine::SearchEngine(QWidget *parent)
     connect(database, &DatabaseHandler::show_message, this, &SearchEngine::show_message);
     tokenizer = new Tokenizer(database);
     connect(tokenizer, &Tokenizer::show_message, this, &SearchEngine::show_message);
+    query_processor = new QueryProcessor(database);
+    connect(query_processor, &QueryProcessor::show_message, this, &SearchEngine::show_message);
 }
 
 SearchEngine::~SearchEngine()
@@ -20,7 +22,10 @@ SearchEngine::~SearchEngine()
 
 void SearchEngine::on_search_button_clicked()
 {
-
+    ui->result_list->clear();
+    QString querry = ui->search_input->toPlainText();
+    if(!querry.isEmpty())
+        query_processor->search(querry);
 }
 
 void SearchEngine::on_document_button_clicked()

@@ -2,7 +2,7 @@
 // /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
 Tokenizer::Tokenizer(DatabaseHandler *database)
 {
-    Tokenizer::database = database;
+    this->database = database;
 
     persian_punctuations << "!" << "،" << "؟" << "." << ":";
 
@@ -25,7 +25,7 @@ void Tokenizer::find_files(QDir directory){
            long int docID = database->get_document_number(path);
            QFile *file = new QFile(path);
            if(file->exists())
-               tokenize(file, docID);
+               document_tokenize(file, docID);
            else
                emit show_message("Can not open file!!!");
        }
@@ -37,7 +37,7 @@ void Tokenizer::find_files(QDir directory){
     }
 }
 
-void Tokenizer::tokenize(QFile *file, unsigned long docID){
+void Tokenizer::document_tokenize(QFile *file, unsigned long docID){
     file->open(QIODevice::ReadOnly | QIODevice::Text);
     QString content = file->readAll();
     QStringList tokens = content.split(QRegExp("\\s+"));

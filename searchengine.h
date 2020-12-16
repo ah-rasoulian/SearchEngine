@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <tokenizer.h>
 #include <databasehandler.h>
+#include <queryprocessor.h>
 #include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,7 @@ private:
     Ui::SearchEngine *ui;
     DatabaseHandler *database;
     Tokenizer *tokenizer;
+    QueryProcessor *query_processor;
 
 };
 #endif // SEARCHENGINE_H

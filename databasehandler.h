@@ -8,6 +8,7 @@
 class DatabaseHandler : public QObject
 {
     Q_OBJECT
+
 public:
     DatabaseHandler();
 
@@ -23,6 +24,7 @@ private:
 
     typedef struct postings_list{
         QMultiMap <unsigned long, unsigned long> doc_position;
+        unsigned long frequency;
     } postings_list;
     QMap <QString, postings_list> postings;
 

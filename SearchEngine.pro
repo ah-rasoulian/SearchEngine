@@ -11,11 +11,13 @@ CONFIG += c++11
 SOURCES += \
     databasehandler.cpp \
     main.cpp \
+    queryprocessor.cpp \
     searchengine.cpp \
     tokenizer.cpp
 
 HEADERS += \
     databasehandler.h \
+    queryprocessor.h \
     searchengine.h \
     tokenizer.h
 
