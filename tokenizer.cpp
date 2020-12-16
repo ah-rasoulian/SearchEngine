@@ -43,15 +43,11 @@ void Tokenizer::tokenize(QFile *file, unsigned long docID){
     QStringList tokens = content.split(QRegExp("\\s+"));
     file->close();
 
+    unsigned long position = -1;
     foreach(QString word, tokens){
-        if (is_stop_word(word))
-            continue;
-
-        // showing the term + doc ID
-        QString message(linguistic_modules(word));
-        message.append(" , doc ID :");
-        message.append(QString::number(docID));
-        emit show_message(message);
+        position ++;
+        if (!is_stop_word(word))
+            database->indexer(linguistic_modules(word), docID, position);
     }
 }
 
