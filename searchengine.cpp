@@ -7,7 +7,7 @@ SearchEngine::SearchEngine(QWidget *parent)
 {
     ui->setupUi(this);
     database = new DatabaseHandler();
-    tokenizer = new Tokenizer();
+    tokenizer = new Tokenizer(database);
     connect(tokenizer, &Tokenizer::show_message, this, &SearchEngine::show_message);
 }
 

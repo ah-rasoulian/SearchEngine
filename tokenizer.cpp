@@ -1,13 +1,14 @@
 #include "tokenizer.h"
 // /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
-Tokenizer::Tokenizer()
+Tokenizer::Tokenizer(DatabaseHandler *database)
 {
+    Tokenizer::database = database;
+
     persian_punctuations << "!" << "،" << "؟" << "." << ":";
 
     persian_plural_signs << "ها";
 
     persian_stop_words << "از" << "در" << "با" << "و" << "من" << "تو" << "او" << "ما" << "شما" << "آن" << "آنها" << "برای" << "تا" << "به" << "را" << "این" << "هم" << "درباره" << "که" << "ولی" << "اما";
-    persian_stop_words << "بود" << "است" << "شده" << "شد" << "کرد" << "کند" << "دارد" << "داشت" << "چه";
 
 }
 
@@ -21,9 +22,10 @@ void Tokenizer::find_files(QDir directory){
         path.append(filename);
 
        if (filename.contains(".txt")){
+           long int docID = database->get_document_number(path);
            QFile *file = new QFile(path);
            if(file->exists())
-               tokenize(file);
+               tokenize(file, docID);
            else
                emit show_message("Can not open file!!!");
        }
@@ -35,7 +37,7 @@ void Tokenizer::find_files(QDir directory){
     }
 }
 
-void Tokenizer::tokenize(QFile *file){
+void Tokenizer::tokenize(QFile *file, unsigned long docID){
     file->open(QIODevice::ReadOnly | QIODevice::Text);
     QString content = file->readAll();
     QStringList tokens = content.split(QRegExp("\\s+"));
@@ -44,7 +46,12 @@ void Tokenizer::tokenize(QFile *file){
     foreach(QString word, tokens){
         if (is_stop_word(word))
             continue;
-        emit show_message(linguistic_modules(word));
+
+        // showing the term + doc ID
+        QString message(linguistic_modules(word));
+        message.append(" , doc ID :");
+        message.append(QString::number(docID));
+        emit show_message(message);
     }
 }
 

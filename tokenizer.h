@@ -3,18 +3,19 @@
 
 #include <QObject>
 #include <QFileDialog>
+#include <databasehandler.h>
 
 class Tokenizer : public QObject
 {
     Q_OBJECT
 
 public:
-    Tokenizer();
+    Tokenizer(DatabaseHandler *database);
     void find_files(QDir directory);
 
 private:
 
-    void tokenize(QFile *file);
+    void tokenize(QFile *file, unsigned long docID);
 
     QStringList persian_punctuations = {};
     QStringList persian_plural_signs = {};
@@ -24,6 +25,8 @@ private:
     QString remove_punctuations(QString word);
     QString remove_plural_signs(QString word);
     bool is_stop_word(QString word);
+
+    DatabaseHandler *database;
 
 signals:
     void show_message(QString message);
