@@ -5,7 +5,10 @@ Tokenizer::Tokenizer()
     persian_punctuations << "!" << "،" << "؟" << "." << ":";
 
     persian_plural_signs << "ها";
-    persian_plural_signs << "ان";
+
+    persian_stop_words << "از" << "در" << "با" << "و" << "من" << "تو" << "او" << "ما" << "شما" << "آن" << "آنها" << "برای" << "تا" << "به" << "را" << "این" << "هم" << "درباره" << "که" << "ولی" << "اما";
+    persian_stop_words << "بود" << "است" << "شده" << "شد" << "کرد" << "کند" << "دارد" << "داشت" << "چه";
+
 }
 
 void Tokenizer::find_files(QDir directory){
@@ -39,6 +42,8 @@ void Tokenizer::tokenize(QFile *file){
     file->close();
 
     foreach(QString word, tokens){
+        if (is_stop_word(word))
+            continue;
         emit show_message(linguistic_modules(word));
     }
 }
@@ -65,3 +70,10 @@ QString Tokenizer::remove_plural_signs(QString word){
     return word;
 }
 
+bool Tokenizer::is_stop_word(QString word){
+    foreach(QString stopword, persian_stop_words){
+        if (word.compare(stopword) == 0)
+            return true;
+    }
+    return false;
+}
