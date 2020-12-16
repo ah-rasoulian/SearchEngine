@@ -1,15 +1,9 @@
 #include "tokenizer.h"
 // /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
-Tokenizer::Tokenizer(DatabaseHandler *database)
+Tokenizer::Tokenizer(DatabaseHandler *database, LinguisticModules *linguistic_modules)
 {
     this->database = database;
-
-    persian_punctuations << "!" << "،" << "؟" << "." << ":";
-
-    persian_plural_signs << "ها";
-
-    persian_stop_words << "از" << "در" << "با" << "و" << "من" << "تو" << "او" << "ما" << "شما" << "آن" << "آنها" << "برای" << "تا" << "به" << "را" << "این" << "هم" << "درباره" << "که" << "ولی" << "اما";
-
+    this->linguistic_modules = linguistic_modules;
 }
 
 void Tokenizer::find_files(QDir directory){
@@ -46,37 +40,7 @@ void Tokenizer::document_tokenize(QFile *file, unsigned long docID){
     unsigned long position = -1;
     foreach(QString word, tokens){
         position ++;
-        if (!is_stop_word(word))
-            database->indexer(linguistic_modules(word), docID, position);
+        if (!linguistic_modules->is_stop_word(word))
+            database->indexer(linguistic_modules->word_normalizer(word), docID, position);
     }
-}
-
-QString Tokenizer::linguistic_modules(QString word){
-    word = remove_punctuations(word);
-    word = remove_plural_signs(word);
-    return word;
-}
-
-QString Tokenizer::remove_punctuations(QString word){
-    foreach(QString punctuation, persian_punctuations){
-        if (word.endsWith(punctuation) || word.startsWith(punctuation))
-            word = word.remove(punctuation);
-    }
-    return word;
-}
-
-QString Tokenizer::remove_plural_signs(QString word){
-    foreach(QString sign, persian_plural_signs){
-        if (word.endsWith(sign))
-            word = word.remove(sign);
-    }
-    return word;
-}
-
-bool Tokenizer::is_stop_word(QString word){
-    foreach(QString stopword, persian_stop_words){
-        if (word.compare(stopword) == 0)
-            return true;
-    }
-    return false;
 }

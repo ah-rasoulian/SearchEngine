@@ -5,6 +5,7 @@
 #include <tokenizer.h>
 #include <databasehandler.h>
 #include <queryprocessor.h>
+#include <linguisticmodules.h>
 #include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
@@ -29,9 +30,11 @@ private slots:
 
 private:
     Ui::SearchEngine *ui;
+
     DatabaseHandler *database;
     Tokenizer *tokenizer;
     QueryProcessor *query_processor;
+    LinguisticModules *linguistic_modules;
 
 };
 #endif // SEARCHENGINE_H

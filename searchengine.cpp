@@ -6,11 +6,16 @@ SearchEngine::SearchEngine(QWidget *parent)
     , ui(new Ui::SearchEngine)
 {
     ui->setupUi(this);
+
     database = new DatabaseHandler();
     connect(database, &DatabaseHandler::show_message, this, &SearchEngine::show_message);
-    tokenizer = new Tokenizer(database);
+
+    linguistic_modules = new LinguisticModules();
+
+    tokenizer = new Tokenizer(database, linguistic_modules);
     connect(tokenizer, &Tokenizer::show_message, this, &SearchEngine::show_message);
-    query_processor = new QueryProcessor(database);
+
+    query_processor = new QueryProcessor(database, linguistic_modules);
     connect(query_processor, &QueryProcessor::show_message, this, &SearchEngine::show_message);
 }
 

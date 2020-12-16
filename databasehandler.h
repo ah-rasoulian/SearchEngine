@@ -5,6 +5,11 @@
 #include <QHash>
 #include <QMap>
 
+typedef struct postings_list{
+    QMultiMap <unsigned long, unsigned long> doc_position;
+    unsigned long frequency;
+} postings_list;
+
 class DatabaseHandler : public QObject
 {
     Q_OBJECT
@@ -22,10 +27,6 @@ private:
     QHash<unsigned long, QString> documents_map_int_to_path;
     QHash<QString, unsigned long> documents_map_path_to_int;
 
-    typedef struct postings_list{
-        QMultiMap <unsigned long, unsigned long> doc_position;
-        unsigned long frequency;
-    } postings_list;
     QMap <QString, postings_list> postings;
 
 signals:

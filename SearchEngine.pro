@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     databasehandler.cpp \
+    linguisticmodules.cpp \
     main.cpp \
     queryprocessor.cpp \
     searchengine.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     databasehandler.h \
+    linguisticmodules.h \
     queryprocessor.h \
     searchengine.h \
     tokenizer.h
