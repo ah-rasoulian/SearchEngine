@@ -4,6 +4,9 @@
 #include <QObject>
 #include <databasehandler.h>
 #include <linguisticmodules.h>
+#include <queue>
+#include <QList>
+#include <QSet>
 
 typedef struct query_words{
     QString word;
@@ -16,13 +19,15 @@ class QueryProcessor : public QObject
 
 public:
     QueryProcessor(DatabaseHandler *database, LinguisticModules *linguistic_modules);
-    void search(QString query);
+    void search(QString query, QString mode);
 
 private:
     DatabaseHandler *database;
     LinguisticModules *linguistic_modules;
 
     QList<query_words> query_tokenizer(QString query);
+
+    void simple_binary_search(QList<query_words> );
 
 signals:
     void show_message(QString message);

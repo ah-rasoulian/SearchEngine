@@ -34,7 +34,7 @@ void Tokenizer::find_files(QDir directory){
 void Tokenizer::document_tokenize(QFile *file, unsigned long docID){
     file->open(QIODevice::ReadOnly | QIODevice::Text);
     QString content = file->readAll();
-    QStringList tokens = content.split(QRegExp("\\s+"));
+    QStringList tokens = content.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
     file->close();
 
     unsigned long position = -1;

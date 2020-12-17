@@ -4,11 +4,7 @@
 #include <QObject>
 #include <QHash>
 #include <QMap>
-
-typedef struct postings_list{
-    QMultiMap <unsigned long, unsigned long> doc_position;
-    unsigned long frequency;
-} postings_list;
+#include <QList>
 
 class DatabaseHandler : public QObject
 {
@@ -22,12 +18,15 @@ public:
 
     void indexer(QString word, unsigned long docID, unsigned long position);
 
+    QList< std::pair<unsigned long, unsigned long> > get_postings_list(QString word);
+    bool word_exists(QString word);
+
 private:
     unsigned long number_of_documents;
     QHash<unsigned long, QString> documents_map_int_to_path;
     QHash<QString, unsigned long> documents_map_path_to_int;
 
-    QMap <QString, postings_list> postings;
+    QMultiMap <QString, std::pair<unsigned long, unsigned long> > postings;
 
 signals:
     void show_message(QString message);

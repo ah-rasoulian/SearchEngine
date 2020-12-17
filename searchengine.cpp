@@ -30,7 +30,7 @@ void SearchEngine::on_search_button_clicked()
     ui->result_list->clear();
     QString querry = ui->search_input->toPlainText();
     if(!querry.isEmpty())
-        query_processor->search(querry);
+        query_processor->search(querry, "simple_binary");
 }
 
 void SearchEngine::on_document_button_clicked()

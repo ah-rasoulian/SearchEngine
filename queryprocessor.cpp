@@ -6,19 +6,27 @@ QueryProcessor::QueryProcessor(DatabaseHandler *database, LinguisticModules *lin
     this->linguistic_modules = linguistic_modules;
 }
 
-void QueryProcessor::search(QString query){
+void QueryProcessor::search(QString query, QString mode){
     QList<query_words> final_query = query_tokenizer(query);
 
+    /*
+     * printing each query word and its position
+     *
     foreach(query_words word, final_query){
         QString message(word.word);
         message.append(" : ");
         message.append(QString::number(word.position));
         emit show_message(message);
     }
+    */
+
+    if(mode.compare("simple_binary") == 0)
+        simple_binary_search(final_query);
+
 }
 
 QList<query_words> QueryProcessor::query_tokenizer(QString query){
-    QStringList tokens = query.split(QRegExp("\\s+"));
+    QStringList tokens = query.split(QRegExp("\\s+"), Qt::SkipEmptyParts);
     QList<query_words> final_query;
     int position = -1;
     foreach(QString word, tokens){
@@ -32,3 +40,37 @@ QList<query_words> QueryProcessor::query_tokenizer(QString query){
     }
     return final_query;
 }
+
+void QueryProcessor::simple_binary_search(QList<query_words> final_query){
+    using namespace std;
+    priority_queue< pair<int , unsigned long> > results;
+    QMap<unsigned long, int> doc_frequency_in_results;
+    QSet<unsigned long> documents;
+
+    foreach(query_words query_word, final_query){
+        if (database->word_exists(query_word.word)){
+            pair <unsigned long, unsigned long> doc_pos;
+            foreach(doc_pos, database->get_postings_list(query_word.word))
+                documents.insert(doc_pos.first);
+
+            foreach(unsigned long docID, documents){
+                if(doc_frequency_in_results.contains(docID))
+                    doc_frequency_in_results.insert(docID, doc_frequency_in_results.value(docID) + 1);
+                else
+                    doc_frequency_in_results.insert(docID, 1);
+            }
+        }
+    }
+
+    QMapIterator<unsigned long, int> iterator(doc_frequency_in_results);
+    while(iterator.hasNext()){
+        iterator.next();
+        results.push(make_pair(iterator.value(), iterator.key()));
+    }
+
+    while (!results.empty()) {
+        emit show_message(database->get_document_path(results.top().second));
+        results.pop();
+    }
+}
+// /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc

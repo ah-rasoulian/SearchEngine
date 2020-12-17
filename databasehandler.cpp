@@ -21,15 +21,17 @@ QString DatabaseHandler::get_document_path(unsigned long document_number){
 }
 
 void DatabaseHandler::indexer(QString word, unsigned long docID, unsigned long position){
-    if(postings.contains(word)){
-        postings_list old_postings_list = postings.value(word);
-        old_postings_list.doc_position.insert(docID, position);
-        old_postings_list.frequency ++;
-    }
-    else{
-        postings_list new_postings_list;
-        new_postings_list.doc_position.insert(docID, position);
-        new_postings_list.frequency = 1;
-        postings.insert(word, new_postings_list);
-    }
+    postings.insert(word, std::make_pair(docID, position));
 }
+
+QList<std::pair<unsigned long, unsigned long> > DatabaseHandler::get_postings_list(QString word){
+    return postings.values(word);
+}
+
+bool DatabaseHandler::word_exists(QString word){
+    if (postings.contains(word))
+        return true;
+    else
+        return false;
+}
+// /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
