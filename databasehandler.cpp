@@ -34,4 +34,3 @@ bool DatabaseHandler::word_exists(QString word){
     else
         return false;
 }
-// /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc

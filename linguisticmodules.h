@@ -16,9 +16,10 @@ private:
     QStringList persian_punctuations = {};
     QStringList persian_plural_signs = {};
     QStringList persian_stop_words = {};
+    QStringList persian_superior_signs = {};
 
     QString remove_punctuations(QString word);
-    QString remove_plural_signs(QString word);
+    QString remove_extra_suffixes(QString word);
 };
 
 #endif // LINGUISTICMODULES_H

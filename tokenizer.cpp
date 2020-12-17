@@ -1,5 +1,5 @@
 #include "tokenizer.h"
-// /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
+
 Tokenizer::Tokenizer(DatabaseHandler *database, LinguisticModules *linguistic_modules)
 {
     this->database = database;

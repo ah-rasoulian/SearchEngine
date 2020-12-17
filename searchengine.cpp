@@ -22,6 +22,8 @@ SearchEngine::SearchEngine(QWidget *parent)
 SearchEngine::~SearchEngine()
 {
     delete ui;
+    delete tokenizer;
+    delete query_processor;
 }
 
 

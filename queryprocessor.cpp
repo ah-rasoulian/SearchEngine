@@ -73,4 +73,3 @@ void QueryProcessor::simple_binary_search(QList<query_words> final_query){
         results.pop();
     }
 }
-// /home/amirhossein/Data/University/Fall 2020/Information Retreival/sampleDoc
