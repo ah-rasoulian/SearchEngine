@@ -48,3 +48,8 @@ void SearchEngine::on_document_button_clicked()
 void SearchEngine::show_message(QString message){
     ui->result_list->addItem(message);
 }
+
+void SearchEngine::on_result_list_itemDoubleClicked(QListWidgetItem *item)
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(item->text()));
+}

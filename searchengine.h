@@ -7,6 +7,8 @@
 #include <queryprocessor.h>
 #include <linguisticmodules.h>
 #include <QFileDialog>
+#include <QListWidgetItem>
+#include <QDesktopServices>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SearchEngine; }
@@ -27,6 +29,8 @@ private slots:
     void on_search_button_clicked();
 
     void on_document_button_clicked();
+
+    void on_result_list_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::SearchEngine *ui;
