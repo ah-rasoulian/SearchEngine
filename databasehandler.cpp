@@ -21,7 +21,22 @@ QString DatabaseHandler::get_document_path(unsigned long document_number){
 }
 
 void DatabaseHandler::indexer(QString word, unsigned long docID, unsigned long position){
-    postings.insert(word, std::make_pair(docID, position));
+    using namespace std;
+    postings.insert(word, make_pair(docID, position));
+
+    if(docID_bag_of_words.contains(docID)){
+        pair<QString, unsigned long> word_freq_tmp;
+        foreach(word_freq_tmp, docID_bag_of_words.values(docID)){
+            if(word_freq_tmp.first.compare(word) == 0){
+                unsigned long new_freq = word_freq_tmp.second + 1;
+                docID_bag_of_words.remove(docID, word_freq_tmp);
+                docID_bag_of_words.insert(docID, make_pair(word, new_freq));
+                break;
+            }
+        }
+    }
+    else
+        docID_bag_of_words.insert(docID, make_pair(word, 1));
 }
 
 QList<std::pair<unsigned long, unsigned long> > DatabaseHandler::get_postings_list(QString word){
@@ -35,17 +50,40 @@ bool DatabaseHandler::word_exists(QString word){
         return false;
 }
 
-double DatabaseHandler::calculate_tf_idf(QString word, long long docID){
+void DatabaseHandler::calculate_word_collection_frequency(){
     using namespace std;
-    QSet<long long> documents;
-    long frequency_in_document = 0;
+    foreach(QString word, postings.keys()){
+        QSet<unsigned long> documents;
+        pair<unsigned long, unsigned long> doc_pos_tmp;
+        foreach(doc_pos_tmp, postings.values(word))
+            documents.insert(doc_pos_tmp.first);
+        word_collection_frequency.insert(word, documents.size());
+    }
+}
 
-    pair<long long, long long> doc_pos_tmp;
-    foreach(doc_pos_tmp, postings.values(word)){
-        documents.insert(doc_pos_tmp.first);
-        if(doc_pos_tmp.first == docID)
-            frequency_in_document ++;
+void DatabaseHandler::calculate_document_tf_idf(){
+    using namespace std;
+    calculate_word_collection_frequency();
+
+    for(unsigned long docID = 0; docID < number_of_documents; docID++){
+        pair<QString, unsigned long> word_freq_tmp;
+        foreach(word_freq_tmp, docID_bag_of_words.values(docID)){
+            double tf_idf = (1 + log10(word_freq_tmp.second)) * log10(number_of_documents / word_collection_frequency.value(word_freq_tmp.first));
+            docID_words_tf_idf.insert(docID, make_pair(word_freq_tmp.first, tf_idf));
+        }
     }
 
-    return (1 + log10(frequency_in_document)) * log10(number_of_documents / documents.size());
+    for(unsigned long docID = 0; docID < number_of_documents; docID++){
+        double sum_square_words_tf_idf = 0;
+        pair<QString, double> word_and_tf_idf;
+        foreach(word_and_tf_idf, docID_words_tf_idf.values(docID)){
+            sum_square_words_tf_idf += pow(word_and_tf_idf.second, 2);
+        }
+        docID_size_tf_idf.insert(docID, sqrt(sum_square_words_tf_idf));
+    }
 }
+
+double DatabaseHandler::calculate_query_tf_idf(QString word, long frequency_in_query){
+    return (1 + log10(frequency_in_query)) * log10(number_of_documents / word_collection_frequency.value(word));
+}
+

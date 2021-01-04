@@ -77,5 +77,15 @@ void QueryProcessor::simple_binary_search(QList<query_words> final_query){
 }
 
 void QueryProcessor::ordered_search(QList<query_words> final_query){
+    QHash<QString, long> query_bag_of_words;
+    foreach(query_words word_pos, final_query){
+        if(query_bag_of_words.contains(word_pos.word))
+            query_bag_of_words.insert(word_pos.word, query_bag_of_words.value(word_pos.word) + 1);
+        else
+            query_bag_of_words.insert(word_pos.word, 1);
+    }
 
+//    foreach(QString word, query_bag_of_words.keys()){
+//        double
+//    }
 }

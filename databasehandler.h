@@ -8,6 +8,7 @@
 #include <QSet>
 #include <math.h>
 
+
 class DatabaseHandler : public QObject
 {
     Q_OBJECT
@@ -23,7 +24,9 @@ public:
     QList< std::pair<unsigned long, unsigned long> > get_postings_list(QString word);
     bool word_exists(QString word);
 
-    double calculate_tf_idf(QString word, long long docID);
+    double calculate_query_tf_idf(QString word, long frequency_in_query);
+    void calculate_document_tf_idf();
+
 
 private:
     unsigned long number_of_documents;
@@ -32,6 +35,12 @@ private:
 
     QMultiMap <QString, std::pair<unsigned long, unsigned long> > postings;
 
+    QMultiMap <unsigned long, std::pair<QString, unsigned long> > docID_bag_of_words;
+    QMap <QString, unsigned long> word_collection_frequency;
+    QMultiMap <unsigned long, std::pair<QString, double> > docID_words_tf_idf;
+    QMap <unsigned long, double> docID_size_tf_idf;
+
+    void calculate_word_collection_frequency();
 
 
 signals:
