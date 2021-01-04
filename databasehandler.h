@@ -5,6 +5,8 @@
 #include <QHash>
 #include <QMap>
 #include <QList>
+#include <QSet>
+#include <math.h>
 
 class DatabaseHandler : public QObject
 {
@@ -21,12 +23,16 @@ public:
     QList< std::pair<unsigned long, unsigned long> > get_postings_list(QString word);
     bool word_exists(QString word);
 
+    double calculate_tf_idf(QString word, long long docID);
+
 private:
     unsigned long number_of_documents;
     QHash<unsigned long, QString> documents_map_int_to_path;
     QHash<QString, unsigned long> documents_map_path_to_int;
 
     QMultiMap <QString, std::pair<unsigned long, unsigned long> > postings;
+
+
 
 signals:
     void show_message(QString message);

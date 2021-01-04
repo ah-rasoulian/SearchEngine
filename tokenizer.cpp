@@ -29,6 +29,7 @@ void Tokenizer::find_files(QDir directory){
                find_files(path);
        }
     }
+
 }
 
 void Tokenizer::document_tokenize(QFile *file, unsigned long docID){

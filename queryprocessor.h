@@ -27,7 +27,8 @@ private:
 
     QList<query_words> query_tokenizer(QString query);
 
-    void simple_binary_search(QList<query_words> );
+    void simple_binary_search(QList<query_words> final_query);
+    void ordered_search(QList<query_words> final_query);
 
 signals:
     void show_message(QString message);

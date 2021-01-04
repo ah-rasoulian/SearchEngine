@@ -55,3 +55,11 @@ void SearchEngine::on_result_list_itemDoubleClicked(QListWidgetItem *item)
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(item->text()));
 }
+
+void SearchEngine::on_ordered_search_button_clicked()
+{
+    ui->result_list->clear();
+    QString querry = ui->search_input->toPlainText();
+    if(!querry.isEmpty())
+        query_processor->search(querry, "ordered");
+}

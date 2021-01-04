@@ -34,3 +34,18 @@ bool DatabaseHandler::word_exists(QString word){
     else
         return false;
 }
+
+double DatabaseHandler::calculate_tf_idf(QString word, long long docID){
+    using namespace std;
+    QSet<long long> documents;
+    long frequency_in_document = 0;
+
+    pair<long long, long long> doc_pos_tmp;
+    foreach(doc_pos_tmp, postings.values(word)){
+        documents.insert(doc_pos_tmp.first);
+        if(doc_pos_tmp.first == docID)
+            frequency_in_document ++;
+    }
+
+    return (1 + log10(frequency_in_document)) * log10(number_of_documents / documents.size());
+}

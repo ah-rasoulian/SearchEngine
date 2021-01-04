@@ -22,6 +22,8 @@ void QueryProcessor::search(QString query, QString mode){
 
     if(mode.compare("simple_binary") == 0)
         simple_binary_search(final_query);
+    else if(mode.compare("ordered") == 0)
+        ordered_search(final_query);
 
 }
 
@@ -72,4 +74,8 @@ void QueryProcessor::simple_binary_search(QList<query_words> final_query){
         emit show_message(database->get_document_path(results.top().second));
         results.pop();
     }
+}
+
+void QueryProcessor::ordered_search(QList<query_words> final_query){
+
 }
