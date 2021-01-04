@@ -24,8 +24,11 @@ public:
     QList< std::pair<unsigned long, unsigned long> > get_postings_list(QString word);
     bool word_exists(QString word);
 
-    double calculate_query_tf_idf(QString word, long frequency_in_query);
+    double calculate_query_tf_idf(QString word,unsigned long frequency_in_query);
     void calculate_document_tf_idf();
+
+    double get_docID_words_tf_idf(QString word, unsigned long docID);
+    double get_docID_size_tf_idf(unsigned long docID);
 
 
 private:

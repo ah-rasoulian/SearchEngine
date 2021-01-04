@@ -7,6 +7,7 @@
 #include <queue>
 #include <QList>
 #include <QSet>
+#include <math.h>
 
 typedef struct query_words{
     QString word;

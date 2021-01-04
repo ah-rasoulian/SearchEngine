@@ -83,7 +83,23 @@ void DatabaseHandler::calculate_document_tf_idf(){
     }
 }
 
-double DatabaseHandler::calculate_query_tf_idf(QString word, long frequency_in_query){
-    return (1 + log10(frequency_in_query)) * log10(number_of_documents / word_collection_frequency.value(word));
+double DatabaseHandler::calculate_query_tf_idf(QString word,unsigned long frequency_in_query){
+    if (word_collection_frequency.contains(word))
+        return (1 + log10(frequency_in_query)) * log10(number_of_documents / word_collection_frequency.value(word));
+    else
+        return 0;
+}
+
+double DatabaseHandler::get_docID_words_tf_idf(QString word, unsigned long docID){
+    std::pair<QString, double> words_tf_idf_tmp;
+    foreach(words_tf_idf_tmp, docID_words_tf_idf.values(docID)){
+        if(words_tf_idf_tmp.first.compare(word) == 0)
+            return words_tf_idf_tmp.second;
+    }
+    return 0;
+}
+
+double DatabaseHandler::get_docID_size_tf_idf(unsigned long docID){
+    return docID_size_tf_idf.value(docID);
 }
 

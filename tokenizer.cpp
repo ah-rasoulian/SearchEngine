@@ -30,6 +30,7 @@ void Tokenizer::find_files(QDir directory){
        }
     }
 
+    database->calculate_document_tf_idf();
 }
 
 void Tokenizer::document_tokenize(QFile *file, unsigned long docID){

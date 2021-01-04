@@ -77,7 +77,8 @@ void QueryProcessor::simple_binary_search(QList<query_words> final_query){
 }
 
 void QueryProcessor::ordered_search(QList<query_words> final_query){
-    QHash<QString, long> query_bag_of_words;
+    using namespace std;
+    QHash<QString, unsigned long> query_bag_of_words;
     foreach(query_words word_pos, final_query){
         if(query_bag_of_words.contains(word_pos.word))
             query_bag_of_words.insert(word_pos.word, query_bag_of_words.value(word_pos.word) + 1);
@@ -85,7 +86,30 @@ void QueryProcessor::ordered_search(QList<query_words> final_query){
             query_bag_of_words.insert(word_pos.word, 1);
     }
 
-//    foreach(QString word, query_bag_of_words.keys()){
-//        double
-//    }
+    priority_queue< pair<double , unsigned long> > results;
+    QSet<unsigned long> documents;
+
+    // for all documents, the size of tf-idf in query is constant. So we don not calculate it.
+    foreach(query_words query_word, final_query){
+        if (database->word_exists(query_word.word)){
+            pair <unsigned long, unsigned long> doc_pos;
+            foreach(doc_pos, database->get_postings_list(query_word.word))
+                documents.insert(doc_pos.first);
+        }
+    }
+
+    foreach(unsigned long docID, documents){
+        double sum_of_query_document_tf_idf_multiplication = 0;
+        foreach(QString query_word, query_bag_of_words.keys()){
+            double word_tf_idf_in_query = database->calculate_query_tf_idf(query_word, query_bag_of_words.value(query_word));
+            double word_tf_idf_in_document = database->get_docID_words_tf_idf(query_word, docID);
+            sum_of_query_document_tf_idf_multiplication += word_tf_idf_in_document * word_tf_idf_in_query;
+        }
+        results.push(make_pair(sum_of_query_document_tf_idf_multiplication / database->get_docID_size_tf_idf(docID), docID));
+    }
+
+    while (!results.empty()) {
+        emit show_message(database->get_document_path(results.top().second));
+        results.pop();
+    }
 }
