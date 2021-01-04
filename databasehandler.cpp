@@ -52,7 +52,7 @@ bool DatabaseHandler::word_exists(QString word){
 
 void DatabaseHandler::calculate_word_collection_frequency(){
     using namespace std;
-    foreach(QString word, postings.keys()){
+    foreach(QString word, postings.uniqueKeys()){
         QSet<unsigned long> documents;
         pair<unsigned long, unsigned long> doc_pos_tmp;
         foreach(doc_pos_tmp, postings.values(word))
@@ -102,4 +102,29 @@ double DatabaseHandler::get_docID_words_tf_idf(QString word, unsigned long docID
 double DatabaseHandler::get_docID_size_tf_idf(unsigned long docID){
     return docID_size_tf_idf.value(docID);
 }
+
+void DatabaseHandler::make_champion_list(){
+    using namespace std;
+    foreach(QString word, postings.uniqueKeys()){
+        QMap<unsigned long, unsigned long> docID_frequency_tmp;
+        pair<unsigned long, unsigned long> doc_pos_tmp;
+        foreach(doc_pos_tmp, postings.values(word)){
+            if(docID_frequency_tmp.contains(doc_pos_tmp.first))
+                docID_frequency_tmp.insert(doc_pos_tmp.first, docID_frequency_tmp.value(doc_pos_tmp.first) + 1);
+            else
+                docID_frequency_tmp.insert(doc_pos_tmp.first, 1);
+        }
+        QMultiMap<unsigned long, unsigned long> freq_docID_tmp;
+        foreach(unsigned long docID, docID_frequency_tmp.keys())
+            freq_docID_tmp.insert(docID_frequency_tmp.value(docID), docID);
+
+        word_freq_doc_chamption_list.insert(word, freq_docID_tmp);
+    }
+}
+
+QMultiMap<unsigned long, unsigned long> DatabaseHandler::get_word_freq_doc_champion_list(QString word){
+    return word_freq_doc_chamption_list.value(word);
+}
+
+// /home/amirhossein/Data/University/Fall 2020/Information Retreival/docs
 

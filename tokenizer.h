@@ -12,7 +12,7 @@ class Tokenizer : public QObject
 
 public:
     Tokenizer(DatabaseHandler *database, LinguisticModules *linguistic_modules);
-    void find_files(QDir directory);
+    void find_files(QDir directory, bool nested_function);
 
 private:
 

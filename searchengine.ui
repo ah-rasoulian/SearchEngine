@@ -75,6 +75,13 @@
       </property>
      </widget>
     </item>
+    <item row="7" column="0">
+     <widget class="QPushButton" name="ordered_search_button">
+      <property name="text">
+       <string>Ranked Search (tf-idf)</string>
+      </property>
+     </widget>
+    </item>
     <item row="4" column="0">
      <widget class="QLabel" name="search_label">
       <property name="autoFillBackground">
@@ -103,7 +110,7 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="0">
+    <item row="9" column="0">
      <widget class="QListWidget" name="result_list">
       <property name="enabled">
        <bool>true</bool>
@@ -159,14 +166,14 @@
        </size>
       </property>
       <property name="text">
-       <string>Binary Search</string>
+       <string>Ranked Search (binary)</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
-     <widget class="QPushButton" name="ordered_search_button">
+    <item row="8" column="0">
+     <widget class="QPushButton" name="ordered_champion">
       <property name="text">
-       <string>Ordered Search</string>
+       <string>Ranked Search (tf-idf &amp; champions-list)</string>
       </property>
      </widget>
     </item>

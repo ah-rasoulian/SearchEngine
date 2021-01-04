@@ -23,7 +23,9 @@ void QueryProcessor::search(QString query, QString mode){
     if(mode.compare("simple_binary") == 0)
         simple_binary_search(final_query);
     else if(mode.compare("ordered") == 0)
-        ordered_search(final_query);
+        ordered_search(final_query, "simple");
+    else if(mode.compare("ordered-champion") == 0)
+        ordered_search(final_query, "champion");
 
 }
 
@@ -76,7 +78,7 @@ void QueryProcessor::simple_binary_search(QList<query_words> final_query){
     }
 }
 
-void QueryProcessor::ordered_search(QList<query_words> final_query){
+void QueryProcessor::ordered_search(QList<query_words> final_query, QString mode){
     using namespace std;
     QHash<QString, unsigned long> query_bag_of_words;
     foreach(query_words word_pos, final_query){
@@ -90,11 +92,26 @@ void QueryProcessor::ordered_search(QList<query_words> final_query){
     QSet<unsigned long> documents;
 
     // for all documents, the size of tf-idf in query is constant. So we don not calculate it.
-    foreach(query_words query_word, final_query){
-        if (database->word_exists(query_word.word)){
-            pair <unsigned long, unsigned long> doc_pos;
-            foreach(doc_pos, database->get_postings_list(query_word.word))
-                documents.insert(doc_pos.first);
+    foreach(QString query_word, query_bag_of_words.keys()){
+        if (database->word_exists(query_word)){
+            if(mode.compare("simple") == 0){
+                pair <unsigned long, unsigned long> doc_pos;
+                foreach(doc_pos, database->get_postings_list(query_word))
+                    documents.insert(doc_pos.first);
+
+            }
+            else if(mode.compare("champion") == 0){
+                QMultiMap<unsigned long, unsigned long> freq_doc_champion_list = database->get_word_freq_doc_champion_list(query_word);
+                QListIterator<unsigned long> freq_doc_champion_list_iterator(freq_doc_champion_list.uniqueKeys());
+                freq_doc_champion_list_iterator.toBack();
+                while (freq_doc_champion_list_iterator.hasPrevious()){
+                    unsigned long freq = freq_doc_champion_list_iterator.previous();
+                    if(freq < 2)    // here we put threshold to get only documents who has more than 2 of a such word
+                        break;
+                    foreach(unsigned long docID, freq_doc_champion_list.values(freq))
+                        documents.insert(docID);
+                }
+            }
         }
     }
 
@@ -108,8 +125,12 @@ void QueryProcessor::ordered_search(QList<query_words> final_query){
         results.push(make_pair(sum_of_query_document_tf_idf_multiplication / database->get_docID_size_tf_idf(docID), docID));
     }
 
-    while (!results.empty()) {
+    int k = 20;
+    while (!results.empty() && k > 0) {
         emit show_message(database->get_document_path(results.top().second));
         results.pop();
+        k --;
     }
 }
+
+// /home/amirhossein/Data/University/Fall 2020/Information Retreival/docs

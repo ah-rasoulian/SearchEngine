@@ -44,7 +44,7 @@ void SearchEngine::on_document_button_clicked()
         ui->result_list->addItem("There is no such directory!");
         return;
     }
-    tokenizer->find_files(directory);
+    tokenizer->find_files(directory, false);
 }
 
 void SearchEngine::show_message(QString message){
@@ -62,4 +62,12 @@ void SearchEngine::on_ordered_search_button_clicked()
     QString querry = ui->search_input->toPlainText();
     if(!querry.isEmpty())
         query_processor->search(querry, "ordered");
+}
+
+void SearchEngine::on_ordered_champion_clicked()
+{
+    ui->result_list->clear();
+    QString querry = ui->search_input->toPlainText();
+    if(!querry.isEmpty())
+        query_processor->search(querry, "ordered-champion");
 }

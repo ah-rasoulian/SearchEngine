@@ -6,7 +6,7 @@ Tokenizer::Tokenizer(DatabaseHandler *database, LinguisticModules *linguistic_mo
     this->linguistic_modules = linguistic_modules;
 }
 
-void Tokenizer::find_files(QDir directory){
+void Tokenizer::find_files(QDir directory, bool nested_function){
     foreach(QString filename, directory.entryList()){
         if (filename.compare(".") == 0 || filename.compare("..") == 0)
             continue;
@@ -26,11 +26,15 @@ void Tokenizer::find_files(QDir directory){
        else{
            QDir nested_directory(path);
            if (nested_directory.exists())
-               find_files(path);
+               find_files(path, true);
        }
     }
 
-    database->calculate_document_tf_idf();
+    if(!nested_function){
+        database->calculate_document_tf_idf();
+        database->make_champion_list();
+        emit show_message("Documents has been added successfully.");
+    }
 }
 
 void Tokenizer::document_tokenize(QFile *file, unsigned long docID){

@@ -30,6 +30,9 @@ public:
     double get_docID_words_tf_idf(QString word, unsigned long docID);
     double get_docID_size_tf_idf(unsigned long docID);
 
+    void make_champion_list();
+    QMultiMap<unsigned long, unsigned long> get_word_freq_doc_champion_list(QString word);
+
 
 private:
     unsigned long number_of_documents;
@@ -42,6 +45,8 @@ private:
     QMap <QString, unsigned long> word_collection_frequency;
     QMultiMap <unsigned long, std::pair<QString, double> > docID_words_tf_idf;
     QMap <unsigned long, double> docID_size_tf_idf;
+
+    QMultiHash <QString, QMultiMap<unsigned long, unsigned long> > word_freq_doc_chamption_list;
 
     void calculate_word_collection_frequency();
 
