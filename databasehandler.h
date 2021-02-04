@@ -19,7 +19,7 @@ public:
     unsigned long get_document_number(QString document_path);
     QString get_document_path(unsigned long document_number);
 
-    void indexer(QString word, unsigned long docID, unsigned long position);
+    void indexer(QString word, unsigned long docID, unsigned long position, QString cluster);
 
     QList< std::pair<unsigned long, unsigned long> > get_postings_list(QString word);
     bool word_exists(QString word);
@@ -32,6 +32,12 @@ public:
 
     void make_champion_list();
     QMultiMap<unsigned long, unsigned long> get_word_freq_doc_champion_list(QString word);
+
+    void calculate_clusters_mean();
+
+    QMultiHash<QString, unsigned long> get_clusters_docID();
+    double get_cluster_word_tf_idf(QString cluster, QString word);
+    double get_cluster_size_tf_idf(QString cluster);
 
 
 private:
@@ -49,6 +55,10 @@ private:
     QMultiHash <QString, QMultiMap<unsigned long, unsigned long> > word_freq_doc_chamption_list;
 
     void calculate_word_collection_frequency();
+
+    QMultiHash <QString, unsigned long> cluster_doc;
+    QMultiHash <QString, QMap<QString, double> > cluster_words_mean_tf_idf;
+    QMap <QString, double> cluster_size_tf_idf;
 
 
 signals:

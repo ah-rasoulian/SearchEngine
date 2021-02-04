@@ -20,8 +20,12 @@ QString DatabaseHandler::get_document_path(unsigned long document_number){
     return documents_map_int_to_path.value(document_number);
 }
 
-void DatabaseHandler::indexer(QString word, unsigned long docID, unsigned long position){
+void DatabaseHandler::indexer(QString word, unsigned long docID, unsigned long position, QString cluster){
     using namespace std;
+    if(cluster.compare("") != 0)
+        cluster_doc.insert(cluster, docID);
+
+
     postings.insert(word, make_pair(docID, position));
 
     if(docID_bag_of_words.contains(docID)){
@@ -124,6 +128,57 @@ void DatabaseHandler::make_champion_list(){
 
 QMultiMap<unsigned long, unsigned long> DatabaseHandler::get_word_freq_doc_champion_list(QString word){
     return word_freq_doc_chamption_list.value(word);
+}
+
+void DatabaseHandler::calculate_clusters_mean(){
+    using namespace std;
+
+    foreach(QString cluster, cluster_doc.uniqueKeys() ){
+
+        int cluster_size = cluster_doc.values(cluster).size();
+        QMap <QString, double> word_mean_tf_idf;
+
+        foreach(unsigned long docID, cluster_doc.values(cluster)){
+            pair<QString, double> word_tf_idf_tmp;
+            foreach(word_tf_idf_tmp, docID_words_tf_idf.values(docID)){
+
+                if(word_mean_tf_idf.contains(word_tf_idf_tmp.first))
+                    word_mean_tf_idf.insert(word_tf_idf_tmp.first, word_mean_tf_idf.value(word_tf_idf_tmp.first) + word_tf_idf_tmp.second);
+                else
+                    word_mean_tf_idf.insert(word_tf_idf_tmp.first, word_tf_idf_tmp.second);
+            }
+        }
+
+        foreach(QString word, word_mean_tf_idf.keys()){
+            word_mean_tf_idf.insert(word, word_mean_tf_idf.value(word) / cluster_size);
+        }
+
+        cluster_words_mean_tf_idf.insert(cluster, word_mean_tf_idf);
+    }
+
+    foreach(QString cluster, cluster_doc.uniqueKeys()){
+        double sum_square_words_tf_idf = 0;
+        foreach(double word_tf_idf, cluster_words_mean_tf_idf.value(cluster).values()){
+            sum_square_words_tf_idf += pow(word_tf_idf, 2);
+        }
+        cluster_size_tf_idf.insert(cluster, sqrt(sum_square_words_tf_idf));
+    }
+
+}
+
+QMultiHash<QString, unsigned long> DatabaseHandler::get_clusters_docID(){
+    return cluster_doc;
+}
+
+double DatabaseHandler::get_cluster_word_tf_idf(QString cluster, QString word){
+    if (cluster_words_mean_tf_idf.value(cluster).contains(word) )
+        return cluster_words_mean_tf_idf.value(cluster).value(word);
+    else
+        return 0;
+}
+
+double DatabaseHandler::get_cluster_size_tf_idf(QString cluster){
+    return cluster_size_tf_idf.value(cluster);
 }
 
 // /home/amirhossein/Data/University/Fall 2020/Information Retreival/docs

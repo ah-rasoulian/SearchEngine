@@ -12,11 +12,11 @@ class Tokenizer : public QObject
 
 public:
     Tokenizer(DatabaseHandler *database, LinguisticModules *linguistic_modules);
-    void find_files(QDir directory, bool nested_function);
+    void find_files(QDir directory, bool nested_function, bool is_clustered_dir);
 
 private:
 
-    void document_tokenize(QFile *file, unsigned long docID);
+    void document_tokenize(QFile *file, unsigned long docID, QString cluster);
 
     DatabaseHandler *database;
     LinguisticModules *linguistic_modules;

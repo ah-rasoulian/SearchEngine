@@ -26,7 +26,8 @@ void QueryProcessor::search(QString query, QString mode){
         ordered_search(final_query, "simple");
     else if(mode.compare("ordered-champion") == 0)
         ordered_search(final_query, "champion");
-
+    else if(mode.compare("clustered") == 0)
+        ordered_search(final_query, "clustered");
 }
 
 QList<query_words> QueryProcessor::query_tokenizer(QString query){
@@ -111,6 +112,29 @@ void QueryProcessor::ordered_search(QList<query_words> final_query, QString mode
                     foreach(unsigned long docID, freq_doc_champion_list.values(freq))
                         documents.insert(docID);
                 }
+            }
+            else if(mode.compare("clustered") == 0){
+
+                QString best_cluster;
+                double best_cluster_tf_idf = -1.0;
+                foreach(QString cluster, database->get_clusters_docID().keys()){
+
+                    double sum_of_querry_mean_cluster_tf_idf_multiplication = 0;
+                    foreach(QString query_word, query_bag_of_words.keys()){
+                        double word_tf_idf_in_query = database->calculate_query_tf_idf(query_word, query_bag_of_words.value(query_word));
+                        double word_tf_idf_in_cluster = database->get_cluster_word_tf_idf(query_word, cluster);
+                        sum_of_querry_mean_cluster_tf_idf_multiplication += word_tf_idf_in_cluster * word_tf_idf_in_query;
+                    }
+
+                    double similarity = sum_of_querry_mean_cluster_tf_idf_multiplication / database->get_cluster_size_tf_idf(cluster);
+                    if(similarity > best_cluster_tf_idf){
+                        best_cluster = cluster;
+                        best_cluster_tf_idf = similarity;
+                    }
+                }
+
+                foreach(unsigned long docID, database->get_clusters_docID().values(best_cluster))
+                    documents.insert(docID);
             }
         }
     }

@@ -36,6 +36,8 @@ private slots:
 
     void on_ordered_champion_clicked();
 
+    void on_clustered_search_button_clicked();
+
 private:
     Ui::SearchEngine *ui;
 
